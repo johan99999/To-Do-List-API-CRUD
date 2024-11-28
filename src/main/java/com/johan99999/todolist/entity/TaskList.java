@@ -1,7 +1,8 @@
-package com.johan99999.todolist.model;
+package com.johan99999.todolist.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "todolist")
-public class List {
+public class TaskList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +20,7 @@ public class List {
     private int no;
 
     @Column(name = "List")
-    @Max(100)
+    @Size(max = 100)
     private String list;
 
     @Enumerated(EnumType.STRING)
