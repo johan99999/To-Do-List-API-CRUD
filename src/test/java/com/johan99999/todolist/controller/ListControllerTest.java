@@ -2,8 +2,10 @@ package com.johan99999.todolist.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.johan99999.todolist.entity.TaskList;
 import com.johan99999.todolist.model.AddNewList;
 import com.johan99999.todolist.model.ApiResponse;
+import com.johan99999.todolist.model.CheckList;
 import com.johan99999.todolist.model.ListResponse;
 import com.johan99999.todolist.repository.ListRepository;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.MockMvcBuilder.*;
@@ -54,5 +58,26 @@ class ListControllerTest {
             assertNotNull(response);
             assertNull(response.getErrors());
         });
+    }
+
+
+    @Test
+    void checkList() throws Exception {
+
+        CheckList request = new CheckList();
+
+        mockMvc.perform(
+                patch("/api/list/" + 1)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(
+                        status().isOk()
+                ).andDo(result -> {
+                    ApiResponse<ListResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+                    });
+                    assertNotNull(response);
+                    assertEquals(TaskList.Finished.YES, response.getData().getFinished());
+                });
     }
 }
